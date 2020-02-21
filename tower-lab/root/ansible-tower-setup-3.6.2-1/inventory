@@ -1,0 +1,61 @@
+[tower]
+tower1.dd4d.internal
+tower2.dd4d.internal
+tower3.dd4d.internal
+[database]
+support1.dd4d.internal pgsqlrep_role=master
+[database_replica]
+support2.dd4d.internal pgsqlrep_role=replica
+[isolated_group_ThreeTierApp]
+bastion.2325.example.opentlc.com ansible_user='ec2-user' ansible_ssh_private_key_file='~/.ssh/openstack.pem'
+[isolated_group_ThreeTierApp:vars]
+controller=tower
+[isolated_group_openstack]
+workstation-2422.rhpds.opentlc.com ansible_user=cloud-user ansible_ssh_private_key_file='~/.ssh/openstack.pem'
+[isolated_group_openstack:vars]
+controller=tower
+
+[all:vars]
+ansible_become=true
+admin_password='r3dh4t1!'
+
+pg_host='support1.dd4d.internal'
+pg_port='5432'
+
+pg_database='awx'
+pg_username='awx'
+pg_password='r3dh4t1!'
+
+rabbitmq_port=5672
+rabbitmq_vhost=tower
+
+rabbitmq_username=tower
+rabbitmq_password='redhat'
+rabbitmq_cookie=cookiemonster
+
+rabbitmq_use_long_name=true
+
+# Isolated Tower nodes automatically generate an RSA key for authentication;
+# To disable this behavior, set this value to false
+# isolated_key_generation=true
+
+
+# SSL-related variables
+
+# If set, this will install a custom CA certificate to the system trust store.
+# custom_ca_cert=/path/to/ca.crt
+
+# Certificate and key to install in nginx for the web UI and API
+# web_server_ssl_cert=/path/to/tower.cert
+# web_server_ssl_key=/path/to/tower.key
+
+# Use SSL for RabbitMQ inter-node communication.  Because RabbitMQ never
+# communicates outside the cluster, a private CA and certificates will be
+# created, and do not need to be supplied.
+# rabbitmq_use_ssl=False
+
+# Server-side SSL settings for PostgreSQL (when we are installing it).
+# postgres_use_ssl=False
+# postgres_ssl_cert=/path/to/pgsql.crt
+# postgres_ssl_key=/path/to/pgsql.key
+
